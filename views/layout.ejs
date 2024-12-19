@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1">
+	<title>Recipe App</title>
+	<!-- jQuery -->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<!-- Bootstrap 3 CSS (if you still use Bootstrap 3) -->
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- Your custom CSS -->
+	<link rel="stylesheet" href="css/recipe_app.css">
+
+	<!-- Bootstrap 3 JavaScript -->
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<!-- Your custom JavaScript -->
+	<script type="text/javascript" src="js/confettiCuisine.js"></script>
+	<script src="http://64.176.227.45:5050/proxy/3000/socket.io/socket.io.js"></script>
+
+
+</head>
+
+<body>
+	<div id="nav">
+		<div class="col-sm nav-align">
+			<h1 id="title">Recipe App</h1>
+		</div>
+		<div class="col-sm nav-align">
+			<a href="http://64.176.227.45:5050/proxy/3000/chat" class="chat-icon">@</a>
+			<a href="http://64.176.227.45:5050/proxy/3000/">
+				<span class="button">Home</span>
+			</a>
+			<a href="http://64.176.227.45:5050/proxy/3000/courses">`
+				<span class="button">Cooking Courses</span>
+			</a>
+			<a href="http://64.176.227.45:5050/proxy/3000/contact">
+				<span class="button">Contact</span>
+			</a>
+			<a href="http://64.176.227.45:5050/proxy/3000/users/apiToken">
+				<span class="button">Request an API token</span>
+			</a>
+			<%- include('courses/_coursesModal') %>
+		</div>
+		<div class="login-status">
+			<% if (loggedIn) { %>
+			<div class="bubble logged-in">
+				Logged in as <a href="<%=`http://64.176.227.45:5050/proxy/3000/users/${currentUser._id}`%>">
+					<%= currentUser.fullName %></a>
+			</div>
+			<div class="log-out">
+				<a href="http://64.176.227.45:5050/proxy/3000//users/logout">Log out</a>
+			</div>
+			<%} else {%>
+			<div class="bubble log-in">
+				<a href="http://64.176.227.45:5050/proxy/3000//users/login">Log In</a>
+			</div>
+			<% } %>
+		</div>
+	</div>
+	<% if (token) {%>
+	<div class="token" style="display: none;">
+		<% token %>
+	<% } %>
+	</div>
+	<div class="flashes">
+		<% if (flashMessages) { %>
+		<% if (flashMessages.success) { %>
+		<div class="flash success">
+			<%= flashMessages.success %>
+		</div>
+		<% } else if (flashMessages.error) { %>
+		<div class="flash error">
+			<%= flashMessages.error %>
+		</div>
+		<% } %>
+		<% } %>
+	</div>
+	<div class="container">
+		<%- body %>
+	</div>
+
+</body>
+
+</html>
+<script>
+    const socket = io("http://64.176.227.45:5050", {
+        path: "/proxy/3000/socket.io/", // Explicitly set the correct path
+    });
+
+    socket.on("connect", () => {
+        console.log("Connected to server!");
+    });
+
+    socket.on("connect_error", (error) => {
+        console.error("Connection error:", error);
+    });
+</script>
